@@ -302,7 +302,9 @@ struct CatalogView: View {
                         Image("Анализы")
                         Text("Анализы")
                     }
-                SecondScreen()
+                Image("iconApp")
+                    .resizable()
+                    .frame(width:50, height:50)
                     .tabItem{
                         Image("Результаты")
                         Text("Результаты")

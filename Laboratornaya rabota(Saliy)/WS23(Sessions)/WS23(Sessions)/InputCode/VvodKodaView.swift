@@ -23,7 +23,7 @@ struct VvodKodaView: View {
     @State var timerVal: Int = 60
     @EnvironmentObject var user: User
     @State var s = ""
-    //@ObservedObject var viewModel = VVodKodaViewModel()
+    @StateObject var viewModel: VVodKodaViewModel
     @State var item: VVodKodaModel? = nil
     var body: some View {
         VStack{
@@ -51,29 +51,37 @@ struct VvodKodaView: View {
                     if okno1 != "" && okno2 != "" && okno3 != "" && okno4 != "" {
                         self.code = okno1+okno2+okno3+okno4
                         print(self.code + " " + user.email)
-                        AF.request("https://medic.madskill.ru/api/signin",
-                                   method: .post,
-                                   headers: [
-                                    "email": user.email,
-                                    "code": self.code
-                                   ]
-                        )
-                        .responseDecodable(of: VVodKodaModel.self) { result in
-                            
-                            if case .success = result.result {
-                                self.item = result.value!
-                                user.token = self.item!.token
-                                print(user.token)
-                            }
-                            else {
-                                print(result.error)
-
-                            }
-                        } //responseDecodable
+                        self.viewModel.email = user.email
+                        
+                        self.viewModel.code = code
+                        self.viewModel.requestSignIn()
+//                        print("Token: \(self.viewModel.log?.token)")
+//                        AF.request("https://medic.madskill.ru/api/signin",
+//                                   method: .post,
+//                                   headers: [
+//                                    "email": user.email,
+//                                    "code": self.code
+//                                   ]
+//                        )
+//                        .responseDecodable(of: VVodKodaModel.self) { result in
+//
+//                            if case .success = result.result {
+//                                self.item = result.value!
+//                                user.token = self.item!.token
+//                                print(user.token)
+//                            }
+//                            else {
+//                                print(result.error)
+//
+//                            }
+//                        } //responseDecodable
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                            print("Token view:\(self.viewModel.log.token)")
+//                        }
                         if let token2 = self.item {
                             self.user.token = token2.token
                         }
-                        self.isActive = true
+//                        self.isActive = true
                       }
                 })
                 .frame(width: 40, height: 40)
@@ -86,7 +94,7 @@ struct VvodKodaView: View {
             
             ZStack{
               
-                NavigationLink(destination:CreatePasswordView(code: s), isActive: $isActive){
+                NavigationLink(destination:CreatePasswordView(code: s), isActive: $viewModel.isActive){
                     EmptyView()
                 }
                 Text("Отправить код повторно можно\n       будет через \(timerVal) секунд")
@@ -107,8 +115,4 @@ struct VvodKodaView: View {
     }
 }
 
-struct VvodKoda_Previews: PreviewProvider {
-    static var previews: some View {
-        VvodKodaView()
-    }
-}
+

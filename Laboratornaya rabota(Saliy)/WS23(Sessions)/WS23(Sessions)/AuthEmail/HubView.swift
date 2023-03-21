@@ -26,14 +26,14 @@ struct baza: View{
 }
 
 struct Hub: View {
-    @State var email: String = "saliy.na@mail.ru"
+    @State var email: String = "saliy.vlad.jr@gmail.com"
     @State var isAuth = false
     @ObservedObject var viewModel = AuthEmailViewModel()
     @EnvironmentObject var user: User
     var body: some View {
         NavigationView{
             VStack{
-                NavigationLink(destination:VvodKodaView(),isActive: $isAuth){}
+                NavigationLink(destination:VvodKodaView(viewModel: .init(user: user)),isActive: $isAuth){}
                 HStack{
                     Image("hand")
                         .resizable()

@@ -9,9 +9,16 @@ import Foundation
 import Alamofire
 
 class VVodKodaViewModel: ObservableObject{
-    @Published var log: VVodKodaModel? = nil
+    @Published var log: VVodKodaModel = .init(token: "")
     @Published var email: String = ""
     @Published var code: String = ""
+    @Published var isActive: Bool = false
+    
+    weak private var user: User?
+    
+    init(user: User) {
+      self.user = user
+    }
     
     func requestSignIn(){
        
@@ -23,15 +30,15 @@ class VVodKodaViewModel: ObservableObject{
                    ]
         )
         .responseDecodable(of: VVodKodaModel.self) { result in
-            
             if case .success = result.result {
                 print("yes123")
                 self.log = result.value!
-                print(self.log!.token)
+                self.user?.token = self.log.token
+                self.isActive = true
+                print("Token: \(self.log.token)")
             }
             else {
                 print(result.error)
-
             }
         } //responseDecodable
 

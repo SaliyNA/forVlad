@@ -10,18 +10,20 @@ import SDWebImageSwiftUI
 
 
 struct NewsView: View {
-    @ObservedObject var newsViewModel = NewsViewModel()
+    @StateObject var newsViewModel = NewsViewModel()
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack{
                 ForEach(newsViewModel.items, id:\.self){ item in
                     ZStack{
-                        WebImage(url: URL(string: item.image.replacingOccurrences(of: " ",
-                                                                                  with: "%20")))
-                        .resizable()
+                        //AsyncImage(url: URL(string: item.image.replacingOccurrences(of: " ", with: "%20"))!)     //!!!!!!!!!!!!!!!!!!!!!!!!!
+                            
+                        WebImage(url: URL(string: item.image.replacingOccurrences(of: " ", with: "%20")))
+                         .resizable()
                         .frame(width: 200, height: 130)
                         .padding(.leading, 80)
                         .padding(.top, 15)
+                        
                         VStack(alignment: .leading){
                             Text(item.name)
                                 .foregroundColor(.white)
@@ -58,6 +60,8 @@ struct NewsView: View {
             .padding(.leading, 20)
             .onAppear{
                 newsViewModel.requestNews()
+                URLCache.shared.memoryCapacity = 10_000_000     //!!!!!!!!!!!!!!!!!!!!!!!!!
+                URLCache.shared.diskCapacity = 1_000_000_000    //!!!!!!!!!!!!!!!!!!!!!!!!!
             }
             
     }
