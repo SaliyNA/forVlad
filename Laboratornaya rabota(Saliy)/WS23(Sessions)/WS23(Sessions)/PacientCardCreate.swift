@@ -36,7 +36,7 @@ struct PacientCardCreate: View {
                     Spacer()
                 }
                 
-                Text("Без карты пациента вы не сможете заказать анализы.")
+                Text("Без карты пациента вы не сможете заказать анализы.")                                         
                     .padding(.bottom,5)
                     .font(.system(size: 13))
                     .foregroundColor(.gray)
